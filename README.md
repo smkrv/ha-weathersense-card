@@ -24,14 +24,23 @@ A beautiful custom Lovelace card for the [WeatherSense integration](https://gith
 
 ### HACS (Recommended)
 
+**Important:** You must create a [release on GitHub](https://github.com/smkrv/ha-weathersense-card/releases) first for HACS to detect the repository!
+
 1. Open HACS in your Home Assistant instance
-2. Go to "Frontend" section
-3. Click the 3 dots menu in the top right
-4. Select "Custom repositories"
-5. Add `https://github.com/smkrv/ha-weathersense-card` as repository
-6. Select "Lovelace" as category
-7. Click "Install"
-8. Restart Home Assistant
+2. Go to **"Frontend"** section (not Integrations!)
+3. Click the **3 dots menu** (⋮) in the top right
+4. Select **"Custom repositories"**
+5. Add this URL: `https://github.com/smkrv/ha-weathersense-card`
+6. Select **"Lovelace"** as category
+7. Click "Add"
+8. Find "WeatherSense Card" in the list and click "Download"
+9. Restart Home Assistant
+10. **Clear browser cache** (Ctrl+F5 or Cmd+Shift+R)
+
+**Note:** If you don't see the card after adding the repository, make sure:
+- A release (v1.0.0) exists on GitHub
+- You selected "Lovelace" category (not "Integration" or "Plugin")
+- You're looking in the Frontend section of HACS
 
 ### Manual Installation
 
@@ -176,7 +185,7 @@ This project is licensed under the CC BY-NC-SA 4.0 International License - see [
 
 ## Changelog
 
-### Version 1.0.0 (2025-01-08)
+### Version 1.0.0
 - Initial release
 - Glassmorphism design with 11 comfort level color themes
 - Full metric display (temperature, humidity, wind speed)
