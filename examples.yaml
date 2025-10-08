@@ -1,0 +1,72 @@
+# WeatherSense Card Configuration Examples
+
+# Basic Configuration
+# The simplest way to use the card
+basic_card:
+  type: custom:weathersense-card
+  entity: sensor.weathersense_feels_like_temperature
+
+# Custom Name
+# Override the default entity name
+custom_name:
+  type: custom:weathersense-card
+  entity: sensor.weathersense_feels_like_temperature
+  name: "Living Room Climate"
+
+# Multiple Cards in Grid
+# Display outdoor and indoor sensors side by side
+grid_layout:
+  type: grid
+  columns: 2
+  cards:
+    - type: custom:weathersense-card
+      entity: sensor.outdoor_weathersense
+      name: "Outdoor"
+    - type: custom:weathersense-card
+      entity: sensor.indoor_weathersense
+      name: "Indoor"
+
+# Vertical Stack with Weather
+# Combine with weather forecast
+vertical_stack:
+  type: vertical-stack
+  cards:
+    - type: custom:weathersense-card
+      entity: sensor.weathersense_feels_like_temperature
+    - type: weather-forecast
+      entity: weather.home
+
+# Horizontal Stack
+# Multiple rooms monitoring
+horizontal_stack:
+  type: horizontal-stack
+  cards:
+    - type: custom:weathersense-card
+      entity: sensor.bedroom_weathersense
+      name: "Bedroom"
+    - type: custom:weathersense-card
+      entity: sensor.livingroom_weathersense
+      name: "Living Room"
+    - type: custom:weathersense-card
+      entity: sensor.kitchen_weathersense
+      name: "Kitchen"
+
+# Grid with Different Locations
+# Monitor multiple areas
+multi_location:
+  type: grid
+  columns: 2
+  square: false
+  cards:
+    - type: custom:weathersense-card
+      entity: sensor.weathersense_backyard
+      name: "Backyard"
+    - type: custom:weathersense-card
+      entity: sensor.weathersense_garage
+      name: "Garage"
+    - type: custom:weathersense-card
+      entity: sensor.weathersense_basement
+      name: "Basement"
+    - type: custom:weathersense-card
+      entity: sensor.weathersense_attic
+      name: "Attic"
