@@ -89,11 +89,27 @@ class WeatherSenseCard extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this._hass = null;
     this._config = {};
+    this._previousState = null;
   }
 
   set hass(hass) {
     this._hass = hass;
-    this.render();
+    
+    // Only render if entity state or attributes have changed
+    const entity = this._entity;
+    if (entity) {
+      const currentState = JSON.stringify({
+        state: entity.state,
+        attributes: entity.attributes
+      });
+      
+      if (this._previousState !== currentState) {
+        this._previousState = currentState;
+        this.render();
+      }
+    } else {
+      this.render();
+    }
   }
 
   setConfig(config) {
@@ -101,6 +117,7 @@ class WeatherSenseCard extends HTMLElement {
       throw new Error("You need to define an entity");
     }
     this._config = config;
+    this._previousState = null; // Reset previous state on config change
     this.render();
   }
 
@@ -577,7 +594,9 @@ class WeatherSenseCardEditor extends HTMLElement {
 
   set hass(hass) {
     this._hass = hass;
-    this.render();
+    if (!this._rendered) {
+      this.render();
+    }
   }
 
   setConfig(config) {
@@ -588,54 +607,54 @@ class WeatherSenseCardEditor extends HTMLElement {
   render() {
     if (!this._hass) return;
 
-    const entities = Object.keys(this._hass.states)
-      .filter(eid => eid.includes("weathersense"))
-      .sort();
-
     this.innerHTML = `
       <style>
         .card-config {
-          padding: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
         }
-        paper-input,
-        paper-dropdown-menu {
+        ha-entity-picker,
+        ha-textfield {
           width: 100%;
-          margin-bottom: 16px;
         }
       </style>
       <div class="card-config">
-        <paper-input
+        <ha-textfield
           id="name-input"
           label="Name (Optional)"
-          value="${this._config.name || ''}"
-        ></paper-input>
+          .value="${this._config.name || ''}"
+          .configValue="${'name'}"
+        ></ha-textfield>
         
-        <paper-dropdown-menu label="Entity">
-          <paper-listbox
-            id="entity-select"
-            slot="dropdown-content"
-            selected="${entities.indexOf(this._config.entity)}"
-          >
-            ${entities.map(entity => `<paper-item>${entity}</paper-item>`).join('')}
-          </paper-listbox>
-        </paper-dropdown-menu>
+        <ha-entity-picker
+          id="entity-picker"
+          label="Entity"
+          .hass="${this._hass}"
+          .value="${this._config.entity || ''}"
+          .configValue="${'entity'}"
+          .includeDomains="${['sensor']}"
+          allow-custom-entity
+        ></ha-entity-picker>
       </div>
     `;
 
+    this._rendered = true;
+
     const nameInput = this.querySelector('#name-input');
-    const entitySelect = this.querySelector('#entity-select');
+    const entityPicker = this.querySelector('#entity-picker');
 
     if (nameInput) {
-      nameInput.addEventListener('value-changed', (ev) => {
-        this._config = { ...this._config, name: ev.detail.value };
+      nameInput.addEventListener('input', (ev) => {
+        this._config = { ...this._config, name: ev.target.value };
         this._fireConfigChanged();
       });
     }
 
-    if (entitySelect) {
-      entitySelect.addEventListener('selected-changed', (ev) => {
-        if (ev.detail.value !== undefined) {
-          this._config = { ...this._config, entity: entities[ev.detail.value] };
+    if (entityPicker) {
+      entityPicker.addEventListener('value-changed', (ev) => {
+        if (ev.detail.value) {
+          this._config = { ...this._config, entity: ev.detail.value };
           this._fireConfigChanged();
         }
       });
