@@ -92,10 +92,105 @@ class WeatherSenseCard extends HTMLElement {
     this._previousState = null;
   }
 
+  _updateValues() {
+    // Quick update of values without full re-render
+    const entity = this._entity;
+    if (!entity || !this.shadowRoot) return;
+    
+    const attributes = entity.attributes;
+    const feelsLike = parseFloat(entity.state);
+    const temperature = attributes.temperature;
+    const humidity = attributes.humidity;
+    const windSpeed = attributes.wind_speed;
+    const comfortDescription = attributes.comfort_description;
+    const comfortLevel = attributes.comfort_level || 'comfortable';
+    const colors = COMFORT_COLORS[comfortLevel] || COMFORT_COLORS.comfortable;
+    const icon = COMFORT_ICONS[comfortLevel] || COMFORT_ICONS.comfortable;
+    const isComfortable = attributes.is_comfortable;
+    const unit = entity.attributes.unit_of_measurement || '°C';
+    
+    // Update temperature
+    const tempNumber = this.shadowRoot.querySelector('.temp-number');
+    if (tempNumber) {
+      tempNumber.textContent = Math.round(temperature);
+    }
+    
+    // Update feels like
+    const feelsLikeSpan = this.shadowRoot.querySelector('.feels-like span:last-child');
+    if (feelsLikeSpan) {
+      feelsLikeSpan.textContent = `${this._getTranslation('feels_like')} ${Math.round(feelsLike)}${unit}`;
+    }
+    
+    // Update comfort description
+    const locationDesc = this.shadowRoot.querySelector('.location-info p');
+    if (locationDesc) {
+      locationDesc.textContent = comfortDescription;
+    }
+    
+    // Update comfort badge
+    const comfortBadge = this.shadowRoot.querySelector('.comfort-badge');
+    if (comfortBadge) {
+      comfortBadge.textContent = isComfortable ? this._getTranslation('comfy') : this._getTranslation('not_comfy');
+      comfortBadge.style.background = `${colors.light}33`;
+      comfortBadge.style.color = colors.text;
+      comfortBadge.style.borderColor = `${colors.light}66`;
+    }
+    
+    // Update comfort icon
+    const comfortIcon = this.shadowRoot.querySelector('.temp-icon-container ha-icon');
+    if (comfortIcon) {
+      comfortIcon.setAttribute('icon', icon);
+      comfortIcon.style.color = colors.light;
+    }
+    
+    // Update humidity if exists
+    if (humidity !== undefined) {
+      const humidityValue = this.shadowRoot.querySelector('.metric-card:first-child .metric-value');
+      if (humidityValue) {
+        humidityValue.innerHTML = `${Math.round(humidity)}<span class="metric-unit">%</span>`;
+        humidityValue.style.color = colors.text;
+      }
+    }
+    
+    // Update wind speed if exists
+    if (windSpeed !== undefined) {
+      const windValue = this.shadowRoot.querySelector('.metric-card:last-child .metric-value');
+      if (windValue) {
+        const isImperial = unit.includes('F');
+        const convertedWind = isImperial ? windSpeed * 2.237 : windSpeed * 3.6;
+        const windUnit = isImperial ? 'mph' : 'km/h';
+        windValue.innerHTML = `${Math.round(convertedWind)}<span class="metric-unit">${windUnit}</span>`;
+        windValue.style.color = colors.text;
+      }
+    }
+    
+    // Update colors
+    const metricIcons = this.shadowRoot.querySelectorAll('.metric-icon');
+    metricIcons.forEach(iconEl => {
+      iconEl.style.background = `${colors.light}33`;
+      const icon = iconEl.querySelector('ha-icon');
+      if (icon) {
+        icon.style.color = colors.text;
+      }
+    });
+    
+    // Update blobs
+    const blob1 = this.shadowRoot.querySelector('.blob-1');
+    const blob2 = this.shadowRoot.querySelector('.blob-2');
+    if (blob1) blob1.style.background = colors.light;
+    if (blob2) blob2.style.background = colors.bg;
+    
+    // Update glass background
+    const glassBackground = this.shadowRoot.querySelector('.glass-background');
+    if (glassBackground) {
+      glassBackground.style.background = `linear-gradient(135deg, ${colors.bg}14 0%, ${colors.bg}08 100%)`;
+    }
+  }
+
   set hass(hass) {
     this._hass = hass;
     
-    // Only render if entity state or attributes have changed
+    // Only update if entity state or attributes have changed
     const entity = this._entity;
     if (entity) {
       const currentState = JSON.stringify({
@@ -105,7 +200,12 @@ class WeatherSenseCard extends HTMLElement {
       
       if (this._previousState !== currentState) {
         this._previousState = currentState;
-        this.render();
+        // Check if we need full re-render or just value update
+        if (this.shadowRoot && this.shadowRoot.querySelector('.weather-card-container')) {
+          this._updateValues();
+        } else {
+          this.render();
+        }
       }
     } else {
       this.render();
@@ -116,7 +216,11 @@ class WeatherSenseCard extends HTMLElement {
     if (!config.entity) {
       throw new Error("You need to define an entity");
     }
-    this._config = config;
+    // Set default scale if not specified
+    this._config = {
+      ...config,
+      scale: config.scale || 'normal'
+    };
     this._previousState = null; // Reset previous state on config change
     this.render();
   }
@@ -135,6 +239,90 @@ class WeatherSenseCard extends HTMLElement {
   render() {
     if (!this.shadowRoot) return;
     
+    // Scale configurations
+    const scaleConfigs = {
+      normal: {
+        containerPadding: '32px',
+        borderRadius: '32px',
+        headerMargin: '32px',
+        tempDisplay: '32px',
+        mainTempSize: '72px',
+        unitSize: '32px',
+        feelsLikeSize: '16px',
+        feelsLikeIconSize: '18px',
+        metricGap: '24px',
+        metricPadding: '20px',
+        metricRadius: '24px',
+        metricIconSize: '40px',
+        metricIconMdi: '20px',
+        metricLabelSize: '13px',
+        metricValueSize: '28px',
+        metricUnitSize: '16px',
+        locationNameSize: '18px',
+        locationDescSize: '14px',
+        badgePadding: '8px 16px',
+        badgeSize: '13px',
+        comfortIconSize: '48px',
+        blobBlur: '80px',
+        blob1Size: '160px',
+        blob2Size: '128px'
+      },
+      compact: {
+        containerPadding: '16px',
+        borderRadius: '20px',
+        headerMargin: '16px',
+        tempDisplay: '16px',
+        mainTempSize: '36px',
+        unitSize: '16px',
+        feelsLikeSize: '12px',
+        feelsLikeIconSize: '14px',
+        metricGap: '12px',
+        metricPadding: '12px',
+        metricRadius: '16px',
+        metricIconSize: '24px',
+        metricIconMdi: '14px',
+        metricLabelSize: '11px',
+        metricValueSize: '18px',
+        metricUnitSize: '12px',
+        locationNameSize: '14px',
+        locationDescSize: '11px',
+        badgePadding: '4px 8px',
+        badgeSize: '11px',
+        comfortIconSize: '28px',
+        blobBlur: '40px',
+        blob1Size: '80px',
+        blob2Size: '64px'
+      },
+      'ultra-compact': {
+        containerPadding: '11px',
+        borderRadius: '14px',
+        headerMargin: '11px',
+        tempDisplay: '11px',
+        mainTempSize: '24px',
+        unitSize: '11px',
+        feelsLikeSize: '10px',
+        feelsLikeIconSize: '12px',
+        metricGap: '8px',
+        metricPadding: '8px',
+        metricRadius: '12px',
+        metricIconSize: '18px',
+        metricIconMdi: '11px',
+        metricLabelSize: '9px',
+        metricValueSize: '14px',
+        metricUnitSize: '10px',
+        locationNameSize: '11px',
+        locationDescSize: '9px',
+        badgePadding: '3px 6px',
+        badgeSize: '9px',
+        comfortIconSize: '20px',
+        blobBlur: '30px',
+        blob1Size: '60px',
+        blob2Size: '48px'
+      }
+    };
+    
+    const scale = scaleConfigs[this._config.scale] || scaleConfigs.normal;
+    
     const styles = `
       <style>
         :host {
@@ -150,7 +338,7 @@ class WeatherSenseCard extends HTMLElement {
 
         .weather-card-container {
           position: relative;
-          border-radius: 32px;
+          border-radius: ${scale.borderRadius};
           overflow: hidden;
           transition: all 0.3s ease;
           animation: cardEntrance 0.5s ease-out;
@@ -185,7 +373,7 @@ class WeatherSenseCard extends HTMLElement {
 
         .content-container {
           position: relative;
-          padding: 32px;
+          padding: ${scale.containerPadding};
           z-index: 1;
         }
 
@@ -193,12 +381,12 @@ class WeatherSenseCard extends HTMLElement {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          margin-bottom: 32px;
+          margin-bottom: ${scale.headerMargin};
         }
 
         .location-info h2 {
           margin: 0 0 4px 0;
-          font-size: 18px;
+          font-size: ${scale.locationNameSize};
           font-weight: 500;
           color: var(--primary-text-color);
           opacity: 0.8;
@@ -206,22 +394,22 @@ class WeatherSenseCard extends HTMLElement {
 
         .location-info p {
           margin: 0;
-          font-size: 14px;
+          font-size: ${scale.locationDescSize};
           color: var(--secondary-text-color);
           opacity: 0.6;
         }
 
         .comfort-badge {
-          padding: 8px 16px;
+          padding: ${scale.badgePadding};
           border-radius: 12px;
-          font-size: 13px;
+          font-size: ${scale.badgeSize};
           font-weight: 600;
           letter-spacing: 0.3px;
           border: 2px solid;
         }
 
         .temperature-display {
-          margin-bottom: 32px;
+          margin-bottom: ${scale.tempDisplay};
           display: flex;
           align-items: flex-start;
           gap: 12px;
@@ -258,7 +446,7 @@ class WeatherSenseCard extends HTMLElement {
         }
 
         .temp-number {
-          font-size: 72px;
+          font-size: ${scale.mainTempSize};
           font-weight: 300;
           line-height: 1;
           letter-spacing: -0.02em;
@@ -266,36 +454,36 @@ class WeatherSenseCard extends HTMLElement {
         }
 
         .temp-unit {
-          font-size: 32px;
+          font-size: ${scale.unitSize};
           font-weight: 300;
           margin-left: 4px;
-          margin-top: 12px;
+          margin-top: ${this._config.scale === 'ultra-compact' ? '4px' : this._config.scale === 'compact' ? '8px' : '12px'};
           opacity: 0.9;
         }
 
         .feels-like {
           display: flex;
           align-items: center;
-          gap: 8px;
-          margin-top: 8px;
-          font-size: 16px;
+          gap: ${this._config.scale === 'ultra-compact' ? '4px' : '8px'};
+          margin-top: ${this._config.scale === 'ultra-compact' ? '4px' : '8px'};
+          font-size: ${scale.feelsLikeSize};
           opacity: 0.8;
         }
 
         .feels-like ha-icon {
-          --mdc-icon-size: 18px;
+          --mdc-icon-size: ${scale.feelsLikeIconSize};
           opacity: 0.6;
         }
 
         .metrics-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          gap: 24px;
+          gap: ${scale.metricGap};
         }
 
         .metric-card {
-          padding: 20px;
-          border-radius: 24px;
+          padding: ${scale.metricPadding};
+          border-radius: ${scale.metricRadius};
           background: rgba(255, 255, 255, 0.5);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
@@ -328,32 +516,32 @@ class WeatherSenseCard extends HTMLElement {
         }
 
         .metric-icon {
-          width: 40px;
-          height: 40px;
-          border-radius: 12px;
+          width: ${scale.metricIconSize};
+          height: ${scale.metricIconSize};
+          border-radius: ${this._config.scale === 'ultra-compact' ? '8px' : '12px'};
           display: flex;
           align-items: center;
           justify-content: center;
         }
 
         .metric-icon ha-icon {
-          --mdc-icon-size: 20px;
+          --mdc-icon-size: ${scale.metricIconMdi};
         }
 
         .metric-label {
-          font-size: 13px;
+          font-size: ${scale.metricLabelSize};
           opacity: 0.7;
           font-weight: 500;
         }
 
         .metric-value {
-          font-size: 28px;
+          font-size: ${scale.metricValueSize};
           font-weight: 500;
           margin-top: 4px;
         }
 
         .metric-unit {
-          font-size: 16px;
+          font-size: ${scale.metricUnitSize};
           opacity: 0.7;
           margin-left: 4px;
         }
@@ -361,7 +549,7 @@ class WeatherSenseCard extends HTMLElement {
         .decorative-blob {
           position: absolute;
           border-radius: 50%;
-          filter: blur(80px);
+          filter: blur(${scale.blobBlur});
           opacity: 0.2;
           pointer-events: none;
           animation: blobFloat 20s infinite ease-in-out;
@@ -380,8 +568,8 @@ class WeatherSenseCard extends HTMLElement {
         }
 
         .blob-1 {
-          width: 160px;
-          height: 160px;
+          width: ${scale.blob1Size};
+          height: ${scale.blob1Size};
           top: 0;
           right: 0;
           transform: translate(30%, -30%);
@@ -389,8 +577,8 @@ class WeatherSenseCard extends HTMLElement {
         }
 
         .blob-2 {
-          width: 128px;
-          height: 128px;
+          width: ${scale.blob2Size};
+          height: ${scale.blob2Size};
           bottom: 0;
           left: 0;
           transform: translate(-30%, 30%);
@@ -537,7 +725,7 @@ class WeatherSenseCard extends HTMLElement {
             <div class="temperature-display">
               <div class="temp-icon-container">
                 <ha-icon icon="${icon}" 
-                         style="color: ${colors.light}; --mdc-icon-size: 48px;">
+                         style="color: ${colors.light}; --mdc-icon-size: ${scale.comfortIconSize};">
                 </ha-icon>
               </div>
               
@@ -579,7 +767,8 @@ class WeatherSenseCard extends HTMLElement {
   static getStubConfig() {
     return {
       entity: "",
-      name: "WeatherSense"
+      name: "WeatherSense",
+      scale: "normal"
     };
   }
 }
@@ -601,16 +790,16 @@ class WeatherSenseCardEditor extends HTMLElement {
     if (!this._initialized) {
       this._initialize();
     } else {
-      // Update entity picker with new hass object
-      const entityPicker = this.querySelector('#entity-picker');
-      if (entityPicker) {
-        entityPicker.hass = hass;
-      }
+      // Update entity picker with new hass object and refresh filter
+      this._updateEntityPickerFilter();
     }
   }
 
   setConfig(config) {
-    this._config = config;
+    this._config = {
+      ...config,
+      scale: config.scale || 'normal'
+    };
     
     // Only initialize if hass is available
     if (this._hass && !this._initialized) {
@@ -632,7 +821,8 @@ class WeatherSenseCardEditor extends HTMLElement {
           gap: 16px;
         }
         ha-entity-picker,
-        ha-textfield {
+        ha-textfield,
+        ha-select {
           width: 100%;
         }
       </style>
@@ -645,10 +835,20 @@ class WeatherSenseCardEditor extends HTMLElement {
         
         <ha-entity-picker
           id="entity-picker"
-          label="Entity"
+          label="Entity (WeatherSense)"
           .value="${this._config.entity || ''}"
           allow-custom-entity
         ></ha-entity-picker>
+        
+        <ha-select
+          id="scale-select"
+          label="Display Scale"
+          .value="${this._config.scale || 'normal'}"
+        >
+          <mwc-list-item value="normal">Normal</mwc-list-item>
+          <mwc-list-item value="compact">Compact (2x smaller)</mwc-list-item>
+          <mwc-list-item value="ultra-compact">Ultra Compact (3x smaller)</mwc-list-item>
+        </ha-select>
       </div>
     `;
 
@@ -658,14 +858,39 @@ class WeatherSenseCardEditor extends HTMLElement {
     // Set initial values after rendering
     requestAnimationFrame(() => {
       this._updateFields();
+      this._updateEntityPickerFilter();
+    });
+  }
+  
+  _updateEntityPickerFilter() {
+    if (!this._hass) return;
+    
+    const entityPicker = this.querySelector('#entity-picker');
+    if (entityPicker) {
+      entityPicker.hass = this._hass;
       
-      // Set hass and domains for entity picker
-      const entityPicker = this.querySelector('#entity-picker');
-      if (entityPicker) {
-        entityPicker.hass = this._hass;
+      // Filter to show only WeatherSense entities
+      const weatherSenseEntities = Object.keys(this._hass.states)
+        .filter(entityId => {
+          const entity = this._hass.states[entityId];
+          // Check if entity is from weathersense integration
+          // WeatherSense entities typically start with sensor.weathersense_
+          // or have attributes that indicate they're from weathersense
+          return entityId.startsWith('sensor.weathersense_') || 
+                 (entity.attributes && 
+                  entity.attributes.comfort_level !== undefined && 
+                  entity.attributes.is_comfortable !== undefined);
+        });
+      
+      // If we have WeatherSense entities, limit the picker to those
+      if (weatherSenseEntities.length > 0) {
+        entityPicker.includeEntities = weatherSenseEntities;
+        entityPicker.includeDomains = [];
+      } else {
+        // Fallback to all sensors if no WeatherSense entities found
         entityPicker.includeDomains = ['sensor'];
       }
-    });
+    }
   }
 
   _updateFields() {
@@ -680,11 +905,18 @@ class WeatherSenseCardEditor extends HTMLElement {
     if (entityPicker && entityPicker.value !== (this._config.entity || '')) {
       entityPicker.value = this._config.entity || '';
     }
+    
+    // Update scale selector
+    const scaleSelect = this.querySelector('#scale-select');
+    if (scaleSelect && scaleSelect.value !== (this._config.scale || 'normal')) {
+      scaleSelect.value = this._config.scale || 'normal';
+    }
   }
 
   _attachEventListeners() {
     const nameInput = this.querySelector('#name-input');
     const entityPicker = this.querySelector('#entity-picker');
+    const scaleSelect = this.querySelector('#scale-select');
 
     if (nameInput) {
       // Use value-changed event for ha-textfield
@@ -715,6 +947,28 @@ class WeatherSenseCardEditor extends HTMLElement {
           this._config = { ...this._config, entity: ev.detail.value };
           this._debouncedConfigChanged();
         }
+      });
+    }
+    
+    if (scaleSelect) {
+      scaleSelect.addEventListener('value-changed', (ev) => {
+        // Prevent update if value hasn't actually changed
+        if (this._config.scale === ev.detail.value) return;
+        
+        this._config = { ...this._config, scale: ev.detail.value };
+        this._debouncedConfigChanged();
+      });
+      
+      // Also handle direct change for ha-select
+      scaleSelect.addEventListener('selected', (ev) => {
+        const newValue = ev.detail?.index !== undefined 
+          ? scaleSelect.items[ev.detail.index].value 
+          : ev.target.value;
+        
+        if (this._config.scale === newValue) return;
+        
+        this._config = { ...this._config, scale: newValue };
+        this._debouncedConfigChanged();
       });
     }
   }

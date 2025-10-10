@@ -7,12 +7,15 @@ A beautiful custom Lovelace card for the [WeatherSense integration](https://gith
 ## Features
 
 - 🎨 **Glassmorphism Design** - Modern translucent effects with backdrop blur
+- 📏 **Scalable Display** - Three size modes: normal, compact (2x smaller), ultra-compact (3x smaller)
+- 🎯 **Smart Entity Filter** - Editor shows only WeatherSense sensors automatically
 - 🌡️ **Dynamic Color Themes** - 11 different color schemes based on comfort levels
 - 📊 **Comprehensive Metrics** - Display temperature, humidity, and wind speed
 - 🌓 **Theme Support** - Automatic adaptation to light and dark themes
 - 🌍 **Multi-language** - Built-in support for 6 languages (EN, RU, DE, ES, HI, ZH-CN)
 - ✨ **Smooth Animations** - Elegant transitions and hover effects
 - 📱 **Responsive Design** - Optimized for all screen sizes
+- ⚡ **Optimized Updates** - Values update without full card re-render
 - 🔌 **100% Offline** - Completely self-contained, no external dependencies or internet required
 
 ## Requirements
@@ -79,7 +82,36 @@ entity: sensor.weathersense_feels_like_temperature
 type: custom:weathersense-card
 entity: sensor.weathersense_feels_like_temperature
 name: "Living Room Climate"
+scale: compact  # normal | compact | ultra-compact
 ```
+
+### Display Scale Options
+
+The card supports three display scales for different layout needs:
+
+**Normal Scale** (default)
+```yaml
+type: custom:weathersense-card
+entity: sensor.weathersense_feels_like_temperature
+scale: normal
+```
+Perfect for main dashboard views with full-size display.
+
+**Compact Scale** (2x smaller)
+```yaml
+type: custom:weathersense-card
+entity: sensor.weathersense_feels_like_temperature
+scale: compact
+```
+Ideal for sidebars or multi-card layouts where space is limited.
+
+**Ultra-compact Scale** (3x smaller)
+```yaml
+type: custom:weathersense-card
+entity: sensor.weathersense_feels_like_temperature
+scale: ultra-compact
+```
+Great for minimal space dashboards or overview pages with many cards.
 
 ### Configuration Options
 
@@ -87,6 +119,7 @@ name: "Living Room Climate"
 |--------|------|----------|---------|-------------|
 | `entity` | string | **Yes** | - | Entity ID of your WeatherSense sensor |
 | `name` | string | No | Entity name | Custom name for the card |
+| `scale` | string | No | `normal` | Display scale: `normal`, `compact` (2x smaller), or `ultra-compact` (3x smaller) |
 
 ## Usage Examples
 
@@ -184,6 +217,21 @@ This project is licensed under the CC BY-NC-SA 4.0 International License - see [
 - Icons from Material Design Icons
 
 ## Changelog
+
+### Version 1.1.0 (2025-01-10)
+- ✨ **NEW:** Scalable display modes - normal, compact (2x smaller), ultra-compact (3x smaller)
+- 🎯 **NEW:** Smart entity filtering - editor automatically shows only WeatherSense sensors
+- ⚡ **IMPROVED:** Optimized value updates without full card re-render
+- 🔄 **IMPROVED:** Dynamic entity list refresh when sensors are added/removed
+- 🎨 **IMPROVED:** Proportionally scaled elements maintain design quality at all sizes
+- 📱 **IMPROVED:** Enhanced responsive design for compact layouts
+- 🐛 **FIXED:** Performance optimization for frequent updates
+
+### Version 1.0.2
+- Bug fixes and minor improvements
+
+### Version 1.0.1
+- Documentation updates
 
 ### Version 1.0.0
 - Initial release
