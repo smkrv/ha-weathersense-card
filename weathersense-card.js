@@ -590,21 +590,38 @@ class WeatherSenseCardEditor extends HTMLElement {
     super();
     this._config = {};
     this._hass = null;
+    this._initialized = false;
+    this._debounceTimeout = null;
   }
 
   set hass(hass) {
     this._hass = hass;
-    if (!this._rendered) {
-      this.render();
+    
+    // Initialize on first hass set or update entity picker
+    if (!this._initialized) {
+      this._initialize();
+    } else {
+      // Update entity picker with new hass object
+      const entityPicker = this.querySelector('#entity-picker');
+      if (entityPicker) {
+        entityPicker.hass = hass;
+      }
     }
   }
 
   setConfig(config) {
     this._config = config;
-    this.render();
+    
+    // Only initialize if hass is available
+    if (this._hass && !this._initialized) {
+      this._initialize();
+    } else if (this._initialized) {
+      // Update existing fields without re-rendering
+      this._updateFields();
+    }
   }
 
-  render() {
+  _initialize() {
     if (!this._hass) return;
 
     this.innerHTML = `
@@ -624,41 +641,94 @@ class WeatherSenseCardEditor extends HTMLElement {
           id="name-input"
           label="Name (Optional)"
           .value="${this._config.name || ''}"
-          .configValue="${'name'}"
         ></ha-textfield>
         
         <ha-entity-picker
           id="entity-picker"
           label="Entity"
-          .hass="${this._hass}"
           .value="${this._config.entity || ''}"
-          .configValue="${'entity'}"
-          .includeDomains="${['sensor']}"
           allow-custom-entity
         ></ha-entity-picker>
       </div>
     `;
 
-    this._rendered = true;
+    this._initialized = true;
+    this._attachEventListeners();
+    
+    // Set initial values after rendering
+    requestAnimationFrame(() => {
+      this._updateFields();
+      
+      // Set hass and domains for entity picker
+      const entityPicker = this.querySelector('#entity-picker');
+      if (entityPicker) {
+        entityPicker.hass = this._hass;
+        entityPicker.includeDomains = ['sensor'];
+      }
+    });
+  }
 
+  _updateFields() {
+    // Update name field
+    const nameInput = this.querySelector('#name-input');
+    if (nameInput && nameInput.value !== (this._config.name || '')) {
+      nameInput.value = this._config.name || '';
+    }
+    
+    // Update entity picker
+    const entityPicker = this.querySelector('#entity-picker');
+    if (entityPicker && entityPicker.value !== (this._config.entity || '')) {
+      entityPicker.value = this._config.entity || '';
+    }
+  }
+
+  _attachEventListeners() {
     const nameInput = this.querySelector('#name-input');
     const entityPicker = this.querySelector('#entity-picker');
 
     if (nameInput) {
+      // Use value-changed event for ha-textfield
+      nameInput.addEventListener('value-changed', (ev) => {
+        // Prevent update if value hasn't actually changed
+        if (this._config.name === ev.detail.value) return;
+        
+        this._config = { ...this._config, name: ev.detail.value };
+        this._debouncedConfigChanged();
+      });
+      
+      // Also handle direct input for better responsiveness
       nameInput.addEventListener('input', (ev) => {
+        // Prevent update if value hasn't actually changed
+        if (this._config.name === ev.target.value) return;
+        
         this._config = { ...this._config, name: ev.target.value };
-        this._fireConfigChanged();
+        this._debouncedConfigChanged();
       });
     }
 
     if (entityPicker) {
       entityPicker.addEventListener('value-changed', (ev) => {
-        if (ev.detail.value) {
+        // Prevent update if value hasn't actually changed
+        if (this._config.entity === ev.detail.value) return;
+        
+        if (ev.detail.value !== undefined) {
           this._config = { ...this._config, entity: ev.detail.value };
-          this._fireConfigChanged();
+          this._debouncedConfigChanged();
         }
       });
     }
+  }
+
+  _debouncedConfigChanged() {
+    // Clear existing timeout
+    if (this._debounceTimeout) {
+      clearTimeout(this._debounceTimeout);
+    }
+    
+    // Set new timeout to fire config change
+    this._debounceTimeout = setTimeout(() => {
+      this._fireConfigChanged();
+    }, 100);
   }
 
   _fireConfigChanged() {

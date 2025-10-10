@@ -1,6 +1,6 @@
 {
   "name": "weathersense-card",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Beautiful custom Lovelace card for WeatherSense integration with glassmorphism design",
   "main": "weathersense-card.js",
   "repository": {

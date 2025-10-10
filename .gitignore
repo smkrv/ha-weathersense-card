@@ -29,3 +29,6 @@ build/
 # Temporary files
 *.tmp
 *.log
+
+# Test files
+test.html
