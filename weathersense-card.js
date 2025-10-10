@@ -931,18 +931,15 @@ class WeatherSenseCardEditor extends HTMLElement {
     }
     
     if (scaleSelect) {
-      // Only handle direct selection event to prevent double-firing and dialog closing
-      scaleSelect.addEventListener('selected', (ev) => {
-        ev.stopPropagation(); // Prevent event bubbling
+      // Use value-changed event to prevent dialog closing
+      scaleSelect.addEventListener('value-changed', (ev) => {
+        // Prevent update if value hasn't actually changed
+        if (this._config.scale === ev.detail.value) return;
         
-        const newValue = ev.detail?.index !== undefined 
-          ? scaleSelect.items[ev.detail.index].value 
-          : ev.target.value;
-        
-        if (this._config.scale === newValue) return;
-        
-        this._config = { ...this._config, scale: newValue };
-        this._debouncedConfigChanged();
+        if (ev.detail.value !== undefined) {
+          this._config = { ...this._config, scale: ev.detail.value };
+          this._debouncedConfigChanged();
+        }
       });
     }
   }
