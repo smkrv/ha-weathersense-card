@@ -218,6 +218,12 @@ This project is licensed under the CC BY-NC-SA 4.0 International License - see [
 
 ## Changelog
 
+### Version 1.1.2 (2025-01-10)
+- 🐛 **FIXED:** Configuration dialog closing when selecting display scale
+- 🔧 **IMPROVED:** Removed duplicate event listener that caused double-firing
+- ⚡ **IMPROVED:** Increased debounce timeout from 100ms to 200ms for better stability
+- 📝 **TECHNICAL:** Added event.stopPropagation() to prevent event bubbling in scale selector
+
 ### Version 1.1.1 (2025-01-10)
 - 🐛 **FIXED:** Entity picker filter bug - now correctly displays all sensor entities
 - 🔧 **IMPROVED:** Simplified entity filtering logic for better reliability

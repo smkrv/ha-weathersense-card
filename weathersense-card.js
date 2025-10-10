@@ -931,16 +931,10 @@ class WeatherSenseCardEditor extends HTMLElement {
     }
     
     if (scaleSelect) {
-      scaleSelect.addEventListener('value-changed', (ev) => {
-        // Prevent update if value hasn't actually changed
-        if (this._config.scale === ev.detail.value) return;
-        
-        this._config = { ...this._config, scale: ev.detail.value };
-        this._debouncedConfigChanged();
-      });
-      
-      // Also handle direct change for ha-select
+      // Only handle direct selection event to prevent double-firing and dialog closing
       scaleSelect.addEventListener('selected', (ev) => {
+        ev.stopPropagation(); // Prevent event bubbling
+        
         const newValue = ev.detail?.index !== undefined 
           ? scaleSelect.items[ev.detail.index].value 
           : ev.target.value;
@@ -959,10 +953,10 @@ class WeatherSenseCardEditor extends HTMLElement {
       clearTimeout(this._debounceTimeout);
     }
     
-    // Set new timeout to fire config change
+    // Set new timeout to fire config change (increased for better stability)
     this._debounceTimeout = setTimeout(() => {
       this._fireConfigChanged();
-    }, 100);
+    }, 200);
   }
 
   _fireConfigChanged() {
