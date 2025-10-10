@@ -218,6 +218,11 @@ This project is licensed under the CC BY-NC-SA 4.0 International License - see [
 
 ## Changelog
 
+### Version 1.1.1 (2025-01-10)
+- 🐛 **FIXED:** Entity picker filter bug - now correctly displays all sensor entities
+- 🔧 **IMPROVED:** Simplified entity filtering logic for better reliability
+- 📝 **TECHNICAL:** Removed complex includeEntities filtering that was preventing entity selection
+
 ### Version 1.1.0 (2025-01-10)
 - ✨ **NEW:** Scalable display modes - normal, compact (2x smaller), ultra-compact (3x smaller)
 - 🎯 **NEW:** Smart entity filtering - editor automatically shows only WeatherSense sensors
