@@ -868,28 +868,8 @@ class WeatherSenseCardEditor extends HTMLElement {
     const entityPicker = this.querySelector('#entity-picker');
     if (entityPicker) {
       entityPicker.hass = this._hass;
-      
-      // Filter to show only WeatherSense entities
-      const weatherSenseEntities = Object.keys(this._hass.states)
-        .filter(entityId => {
-          const entity = this._hass.states[entityId];
-          // Check if entity is from weathersense integration
-          // WeatherSense entities typically start with sensor.weathersense_
-          // or have attributes that indicate they're from weathersense
-          return entityId.startsWith('sensor.weathersense_') || 
-                 (entity.attributes && 
-                  entity.attributes.comfort_level !== undefined && 
-                  entity.attributes.is_comfortable !== undefined);
-        });
-      
-      // If we have WeatherSense entities, limit the picker to those
-      if (weatherSenseEntities.length > 0) {
-        entityPicker.includeEntities = weatherSenseEntities;
-        entityPicker.includeDomains = [];
-      } else {
-        // Fallback to all sensors if no WeatherSense entities found
-        entityPicker.includeDomains = ['sensor'];
-      }
+      // Show all sensor entities (including WeatherSense)
+      entityPicker.includeDomains = ['sensor'];
     }
   }
 
