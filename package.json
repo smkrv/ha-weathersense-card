@@ -8,7 +8,8 @@
     "dev": "rollup -c -w",
     "build": "rollup -c",
     "lint": "eslint src/",
-    "lint:fix": "eslint src/ --fix"
+    "lint:fix": "eslint src/ --fix",
+    "preview": "npm run build && npx -y http-server -p 8765 --cors -c-1 -o test.html"
   },
   "dependencies": {
     "lit": "^3.2.0"
