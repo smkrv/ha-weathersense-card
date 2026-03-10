@@ -23,7 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # Build
-dist/
 build/
 
 # Temporary files
