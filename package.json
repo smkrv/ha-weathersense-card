@@ -15,6 +15,7 @@
     "lit": "^3.2.0"
   },
   "devDependencies": {
+    "@mdi/font": "^7.4.47",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-terser": "^0.4.4",
     "eslint": "^9.0.0",
@@ -25,11 +26,19 @@
     "url": "git+https://github.com/smkrv/ha-weathersense-card.git"
   },
   "keywords": [
-    "home-assistant", "lovelace", "custom-card", "weathersense",
-    "weather", "comfort", "hacs", "lit"
+    "home-assistant",
+    "lovelace",
+    "custom-card",
+    "weathersense",
+    "weather",
+    "comfort",
+    "hacs",
+    "lit"
   ],
   "author": "SMKRV",
   "license": "CC-BY-NC-SA-4.0",
-  "bugs": { "url": "https://github.com/smkrv/ha-weathersense-card/issues" },
+  "bugs": {
+    "url": "https://github.com/smkrv/ha-weathersense-card/issues"
+  },
   "homepage": "https://github.com/smkrv/ha-weathersense-card#readme"
 }
