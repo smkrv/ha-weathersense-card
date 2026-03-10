@@ -193,39 +193,6 @@ Rollup bundles everything into a single `dist/weathersense-card.js` for HACS dis
 
 </details>
 
-## Changelog
-
-### Version 2.0.0
-
-**Complete rewrite — Lit + Rollup architecture**
-
-- **NEW:** Rewritten from vanilla JS to LitElement with Rollup build system
-- **NEW:** Hybrid Glass+Material visual design with subtle comfort-level color glow
-- **NEW:** Atmospheric pressure display with configurable units (hPa/mmHg/inHg/kPa)
-- **NEW:** Per-metric unit selectors — temperature (°C/°F), wind (m/s/km/h/mph/knots), pressure
-- **NEW:** Comfort description display from integration
-- **NEW:** Calculation method display (Heat Index, Wind Chill, Steadman, Indoor)
-- **NEW:** Czech language support (7 languages total)
-- **NEW:** Full visual card editor with all configuration options
-- **NEW:** CI/CD workflows — HACS validation, automated releases, lint checks
-- **IMPROVED:** CSS custom properties scale system (no JS object scaling)
-- **IMPROVED:** Modular source code — constants, translations, utils, styles separated
-- **IMPROVED:** All translations fully covered (UI, editor, units, methods, scales)
-
-### Version 1.1.x
-
-- Configuration dialog fixes
-- Entity picker improvements
-- Scalable display modes
-- Performance optimizations
-
-### Version 1.0.0
-
-- Initial release with glassmorphism design
-- 11 comfort level color themes
-- Basic metrics (temperature, humidity, wind)
-- Multi-language support (6 languages)
-
 ## Legal Disclaimer and Limitation of Liability
 
 ### Software Disclaimer
