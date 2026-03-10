@@ -32,3 +32,8 @@ build/
 
 # Test files
 test.html
+
+# Claude Code
+CLAUDE.md
+.superpowers/
+docs/superpowers/
