@@ -2,7 +2,7 @@
 
 A beautiful custom Lovelace card for the [WeatherSense integration](https://github.com/smkrv/ha-weathersense) featuring hybrid glass+material design and dynamic comfort level visualization.
 
-![WeatherSense Card](https://raw.githubusercontent.com/smkrv/ha-weathersense-card/main/screenshots/screenshot.webp)
+<img src="https://raw.githubusercontent.com/smkrv/ha-weathersense-card/main/screenshots/screenshot.webp" alt="WeatherSense Card" width="800">
 
 ## Features
 
