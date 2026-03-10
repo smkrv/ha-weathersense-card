@@ -1,7 +1,7 @@
 import { LitElement, html, nothing } from 'lit';
 import { cardStyles } from './styles.js';
 import { COMFORT_COLORS, COMFORT_ICONS, DEFAULT_CONFIG } from './constants.js';
-import { convertTemperature, convertWindSpeed, convertPressure, formatValue } from './utils.js';
+import { convertTemperature, convertWindSpeed, convertPressure, formatValue, translateUnit } from './utils.js';
 import { t } from './translations.js';
 
 class WeatherSenseCard extends LitElement {
@@ -147,11 +147,11 @@ class WeatherSenseCard extends LitElement {
             <div class="temp-main">
               <div class="temp-value-row">
                 <span class="temp-value">${temp.value}</span>
-                <span class="temp-unit">${temp.unit}</span>
+                <span class="temp-unit">${translateUnit(temp.unit, t, this.hass)}</span>
               </div>
               <span class="feels-like">
                 ${t('feels_like', this.hass)}
-                <span class="feels-like-value">${feelsLike}${temp.unit}</span>
+                <span class="feels-like-value">${feelsLike}${translateUnit(temp.unit, t, this.hass)}</span>
               </span>
             </div>
           </div>
@@ -176,7 +176,7 @@ class WeatherSenseCard extends LitElement {
                 <div class="metric-card">
                   <ha-icon class="metric-icon" icon="mdi:weather-windy"></ha-icon>
                   <div class="metric-info">
-                    <span class="metric-value">${wind.value} ${wind.unit}</span>
+                    <span class="metric-value">${wind.value} ${translateUnit(wind.unit, t, this.hass)}</span>
                     <span class="metric-label">${t('wind', this.hass)}</span>
                   </div>
                 </div>
@@ -186,7 +186,7 @@ class WeatherSenseCard extends LitElement {
                 <div class="metric-card">
                   <ha-icon class="metric-icon" icon="mdi:gauge"></ha-icon>
                   <div class="metric-info">
-                    <span class="metric-value">${pressure.value} ${pressure.unit}</span>
+                    <span class="metric-value">${pressure.value} ${translateUnit(pressure.unit, t, this.hass)}</span>
                     <span class="metric-label">${t('pressure', this.hass)}</span>
                   </div>
                 </div>

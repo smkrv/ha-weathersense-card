@@ -30,6 +30,17 @@ export function formatValue(value, decimals = 0) {
   return Number(value).toFixed(decimals);
 }
 
+const UNIT_TRANSLATION_KEYS = {
+  '°C': 'unit_celsius', '°F': 'unit_fahrenheit',
+  'hPa': 'unit_hpa', 'mmHg': 'unit_mmhg', 'inHg': 'unit_inhg', 'kPa': 'unit_kpa',
+  'm/s': 'unit_ms', 'km/h': 'unit_kmh', 'mph': 'unit_mph', 'knots': 'unit_knots',
+};
+
+export function translateUnit(unit, tFunc, hass) {
+  const key = UNIT_TRANSLATION_KEYS[unit];
+  return key ? tFunc(key, hass) : unit;
+}
+
 export function normalizeLanguage(lang) {
   if (!lang) return 'en';
   const normalized = lang.toLowerCase().replace('_', '-');
