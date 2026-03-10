@@ -27,6 +27,8 @@ A beautiful custom Lovelace card for the [WeatherSense integration](https://gith
 
 ### HACS (Recommended)
 
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=smkrv&repository=ha-weathersense-card&category=Plugin"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" width="170" height="auto"></a>
+
 1. Open HACS in your Home Assistant instance
 2. Go to **"Frontend"** section
 3. Click the **3 dots menu** in the top right
