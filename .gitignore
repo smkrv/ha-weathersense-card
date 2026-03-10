@@ -23,7 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # Build
-dist/
 build/
 
 # Temporary files
@@ -32,3 +31,10 @@ build/
 
 # Test files
 test.html
+test-*.png
+
+# Claude Code
+CLAUDE.md
+.claude/
+.superpowers/
+docs/superpowers/

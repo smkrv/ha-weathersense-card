@@ -1,8 +1,26 @@
 {
   "name": "weathersense-card",
-  "version": "1.1.5",
-  "description": "Beautiful custom Lovelace card for WeatherSense integration with glassmorphism design and scalable display modes",
-  "main": "weathersense-card.js",
+  "version": "2.0.0",
+  "description": "Custom Lovelace card for WeatherSense integration with hybrid glass design and configurable display",
+  "main": "dist/weathersense-card.js",
+  "type": "module",
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "preview": "npm run build && npx -y http-server -p 8765 --cors -c-1 -o test.html"
+  },
+  "dependencies": {
+    "lit": "^3.2.0"
+  },
+  "devDependencies": {
+    "@mdi/font": "^7.4.47",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "eslint": "^9.0.0",
+    "rollup": "^4.28.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/smkrv/ha-weathersense-card.git"
@@ -14,15 +32,11 @@
     "weathersense",
     "weather",
     "comfort",
-    "temperature",
     "hacs",
-    "glassmorphism",
-    "scalable",
-    "compact",
-    "entity-filter"
+    "lit"
   ],
   "author": "SMKRV",
-  "license": "CC-BY-NC-SA-4.0",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "bugs": {
     "url": "https://github.com/smkrv/ha-weathersense-card/issues"
   },

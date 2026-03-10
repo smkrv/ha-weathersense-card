@@ -1,5 +1,5 @@
 {
   "name": "WeatherSense Card",
   "render_readme": true,
-  "filename": "weathersense-card.js"
+  "filename": "dist/weathersense-card.js"
 }
