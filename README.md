@@ -1,4 +1,13 @@
+<div align="center">
+
 # WeatherSense Card for Home Assistant
+
+</div>
+<div align="center">
+
+![GitHub release](https://img.shields.io/github/v/release/smkrv/ha-weathersense-card?style=flat-square) ![GitHub last commit](https://img.shields.io/github/last-commit/smkrv/ha-weathersense-card?style=flat-square) [![License: PolyForm Noncommercial](https://img.shields.io/badge/License-PolyForm%20NC%201.0-lightgrey.svg?style=flat-square)](https://polyformproject.org/licenses/noncommercial/1.0.0) [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=flat-square)](https://github.com/hacs/integration) ![English](https://img.shields.io/badge/lang-EN-blue?style=flat-square) ![Russian](https://img.shields.io/badge/lang-RU-red?style=flat-square) ![German](https://img.shields.io/badge/lang-DE-black?style=flat-square) ![Spanish](https://img.shields.io/badge/lang-ES-yellow?style=flat-square) ![Hindi](https://img.shields.io/badge/lang-HI-orange?style=flat-square) ![Chinese](https://img.shields.io/badge/lang-ZH--CN-green?style=flat-square) ![Czech](https://img.shields.io/badge/lang-CS-11457E?style=flat-square)
+
+</div>
 
 A beautiful custom Lovelace card for the [WeatherSense integration](https://github.com/smkrv/ha-weathersense) featuring hybrid glass+material design and dynamic comfort level visualization.
 
