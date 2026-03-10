@@ -135,7 +135,22 @@ The card interface is available in:
 
 Language is automatically detected from Home Assistant settings.
 
-## Development
+## Troubleshooting
+
+### Card not showing up
+
+1. Verify the resource is loaded (Settings → Dashboards → Resources)
+2. Clear browser cache completely (try incognito mode)
+3. Check the entity exists (Developer Tools → States)
+
+### Console errors
+
+Open browser console (F12) and check for errors:
+- `Custom element not found` — Resource not loaded
+- `Entity not available` — Check entity ID
+
+<details>
+<summary><strong>Development</strong></summary>
 
 ### Prerequisites
 
@@ -156,6 +171,7 @@ npm install
 |---------|-------------|
 | `npm run dev` | Watch mode — rebuild on changes |
 | `npm run build` | Production build to `dist/` |
+| `npm run preview` | Build + open test page at `localhost:8765` |
 | `npm run lint` | Lint source files |
 | `npm run lint:fix` | Lint and auto-fix |
 
@@ -175,36 +191,7 @@ eslint.config.js                # ESLint flat config
 
 Rollup bundles everything into a single `dist/weathersense-card.js` for HACS distribution.
 
-## Troubleshooting
-
-### Card not showing up
-
-1. Verify the resource is loaded (Settings → Dashboards → Resources)
-2. Clear browser cache completely (try incognito mode)
-3. Check the entity exists (Developer Tools → States)
-
-### Console errors
-
-Open browser console (F12) and check for errors:
-- `Custom element not found` — Resource not loaded
-- `Entity not available` — Check entity ID
-
-## Support
-
-- **Issues**: [GitHub Issues](https://github.com/smkrv/ha-weathersense-card/issues)
-- **Integration**: [WeatherSense Integration](https://github.com/smkrv/ha-weathersense)
-- **Community**: [Home Assistant Community](https://community.home-assistant.io/)
-
-## License
-
-This project is licensed under the CC BY-NC-SA 4.0 International License — see [LICENSE](LICENSE) for details.
-
-## Credits
-
-- Created by [SMKRV](https://github.com/smkrv)
-- Companion card for [WeatherSense Integration](https://github.com/smkrv/ha-weathersense)
-- Built with [Lit](https://lit.dev/) and [Rollup](https://rollupjs.org/)
-- Icons from [Material Design Icons](https://materialdesignicons.com/)
+</details>
 
 ## Changelog
 
@@ -239,6 +226,43 @@ This project is licensed under the CC BY-NC-SA 4.0 International License — see
 - Basic metrics (temperature, humidity, wind)
 - Multi-language support (6 languages)
 
+## Legal Disclaimer and Limitation of Liability
+
+### Software Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## License
+
+Author: SMKRV
+[PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0) — see [LICENSE](LICENSE) for details.
+
 ---
 
-Made with care for the Home Assistant community
+## Support the Project
+
+The best support is:
+- Sharing feedback
+- Contributing ideas
+- Recommending to friends
+- Reporting issues
+- Star the repository
+
+If you want to say thanks financially, you can send a small token of appreciation in USDT:
+
+**USDT Wallet (TRC10/TRC20):**
+`TXC9zYHYPfWUGi4Sv4R1ctTBGScXXQk5HZ`
+
+*Open-source is built by community passion!*
+
+---
+
+<div align="center">
+
+Made with care for the Home Assistant Community
+
+[Report Bug](https://github.com/smkrv/ha-weathersense-card/issues) · [Request Feature](https://github.com/smkrv/ha-weathersense-card/issues)
+
+</div>
