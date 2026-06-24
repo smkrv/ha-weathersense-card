@@ -44,7 +44,7 @@ class WeatherSenseCard extends LitElement {
     const entity = this.hass.states[this._config.entity];
     if (!entity) return;
 
-    const level = entity.attributes.comfort_level || 'comfortable';
+    const level = entity.attributes.comfort_level?.toLowerCase() || 'comfortable';
     const colors = COMFORT_COLORS[level] || COMFORT_COLORS.comfortable;
 
     this.style.setProperty('--ws-color-bg', colors.bg);
