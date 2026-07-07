@@ -30,7 +30,7 @@ A beautiful custom Lovelace card for the [WeatherSense integration](https://gith
 ## Requirements
 
 - Home Assistant 2023.1 or newer
-- [WeatherSense integration](https://github.com/smkrv/ha-weathersense) installed and configured
+- [WeatherSense integration](https://github.com/smkrv/ha-weathersense) **1.3.0 or newer** installed and configured (older integration versions display wrong comfort colors and a swapped temperature pair with any card version)
 
 ## Installation
 
