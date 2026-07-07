@@ -3,7 +3,7 @@ import { normalizeLanguage } from './utils.js';
 const TRANSLATIONS = {
   en: {
     humidity: 'Humidity', wind: 'Wind', pressure: 'Pressure',
-    feels_like: 'Feels like', comfy: 'Comfy', not_comfy: 'Not Comfy',
+    entity_unavailable: 'Entity not available', feels_like: 'Feels like', comfy: 'Comfy', not_comfy: 'Not Comfy',
     method_heat_index: 'Heat Index', method_wind_chill: 'Wind Chill',
     method_steadman: 'Steadman Apparent Temp', method_indoor: 'Indoor Comfort',
     unit_celsius: '°C', unit_fahrenheit: '°F',
@@ -19,7 +19,7 @@ const TRANSLATIONS = {
   },
   ru: {
     humidity: 'Влажность', wind: 'Ветер', pressure: 'Давление',
-    feels_like: 'Ощущается как', comfy: 'Комфортно', not_comfy: 'Некомфортно',
+    entity_unavailable: 'Сущность недоступна', feels_like: 'Ощущается как', comfy: 'Комфортно', not_comfy: 'Некомфортно',
     method_heat_index: 'Индекс жары', method_wind_chill: 'Охлаждение ветром',
     method_steadman: 'Температура по Стедману', method_indoor: 'Комнатный комфорт',
     unit_celsius: '°C', unit_fahrenheit: '°F',
@@ -35,7 +35,7 @@ const TRANSLATIONS = {
   },
   de: {
     humidity: 'Feuchtigkeit', wind: 'Wind', pressure: 'Luftdruck',
-    feels_like: 'Gefühlt', comfy: 'Komfortabel', not_comfy: 'Unkomfortabel',
+    entity_unavailable: 'Entität nicht verfügbar', feels_like: 'Gefühlt', comfy: 'Komfortabel', not_comfy: 'Unkomfortabel',
     method_heat_index: 'Hitzeindex', method_wind_chill: 'Windchill',
     method_steadman: 'Steadman-Temperatur', method_indoor: 'Raumkomfort',
     unit_celsius: '°C', unit_fahrenheit: '°F',
@@ -51,7 +51,7 @@ const TRANSLATIONS = {
   },
   es: {
     humidity: 'Humedad', wind: 'Viento', pressure: 'Presión',
-    feels_like: 'Sensación', comfy: 'Confortable', not_comfy: 'Inconfortable',
+    entity_unavailable: 'Entidad no disponible', feels_like: 'Sensación', comfy: 'Confortable', not_comfy: 'Inconfortable',
     method_heat_index: 'Índice de calor', method_wind_chill: 'Sensación térmica',
     method_steadman: 'Temperatura Steadman', method_indoor: 'Confort interior',
     unit_celsius: '°C', unit_fahrenheit: '°F',
@@ -67,7 +67,7 @@ const TRANSLATIONS = {
   },
   hi: {
     humidity: 'आर्द्रता', wind: 'हवा', pressure: 'दबाव',
-    feels_like: 'महसूस होता है', comfy: 'आरामदायक', not_comfy: 'असुविधाजनक',
+    entity_unavailable: 'एंटिटी उपलब्ध नहीं है', feels_like: 'महसूस होता है', comfy: 'आरामदायक', not_comfy: 'असुविधाजनक',
     method_heat_index: 'ऊष्मा सूचकांक', method_wind_chill: 'शीत वायु',
     method_steadman: 'स्टेडमैन तापमान', method_indoor: 'इनडोर आराम',
     unit_celsius: '°C', unit_fahrenheit: '°F',
@@ -83,7 +83,7 @@ const TRANSLATIONS = {
   },
   'zh-CN': {
     humidity: '湿度', wind: '风速', pressure: '气压',
-    feels_like: '体感', comfy: '舒适', not_comfy: '不舒适',
+    entity_unavailable: '实体不可用', feels_like: '体感', comfy: '舒适', not_comfy: '不舒适',
     method_heat_index: '酷热指数', method_wind_chill: '风寒指数',
     method_steadman: '斯特德曼体感温度', method_indoor: '室内舒适度',
     unit_celsius: '°C', unit_fahrenheit: '°F',
@@ -99,7 +99,7 @@ const TRANSLATIONS = {
   },
   cs: {
     humidity: 'Vlhkost', wind: 'Vítr', pressure: 'Tlak',
-    feels_like: 'Pocitově', comfy: 'Komfortní', not_comfy: 'Nekomfortní',
+    entity_unavailable: 'Entita není dostupná', feels_like: 'Pocitově', comfy: 'Komfortní', not_comfy: 'Nekomfortní',
     method_heat_index: 'Teplotní index', method_wind_chill: 'Větrný chlad',
     method_steadman: 'Steadmanova teplota', method_indoor: 'Vnitřní komfort',
     unit_celsius: '°C', unit_fahrenheit: '°F',

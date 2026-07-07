@@ -129,8 +129,11 @@ class WeatherSenseCard extends LitElement {
     }
 
     const entity = this.hass.states[this._config.entity];
-    if (!entity) {
-      return html`<ha-card><div class="unavailable"><ha-icon icon="mdi:alert-circle-outline"></ha-icon><span>Entity not available</span></div></ha-card>`;
+    // An 'unavailable'/'unknown' state renders the same panel as a missing
+    // entity: the attributes are stale at that point, and showing them with
+    // a green "comfortable" theme misrepresents the actual state.
+    if (!entity || entity.state === 'unavailable' || entity.state === 'unknown') {
+      return html`<ha-card><div class="unavailable"><ha-icon icon="mdi:alert-circle-outline"></ha-icon><span>${t('entity_unavailable', this.hass)}</span></div></ha-card>`;
     }
 
     const attrs = entity.attributes;
