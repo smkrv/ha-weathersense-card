@@ -44,7 +44,7 @@ class WeatherSenseCard extends LitElement {
     const entity = this.hass.states[this._config.entity];
     if (!entity) return;
 
-    const level = entity.attributes.comfort_level || 'comfortable';
+    const level = this._getComfortLevel(entity.attributes);
     const colors = COMFORT_COLORS[level] || COMFORT_COLORS.comfortable;
 
     this.style.setProperty('--ws-color-bg', colors.bg);
@@ -60,10 +60,26 @@ class WeatherSenseCard extends LitElement {
     }
   }
 
+  // comfort_level is a stable slug ('slightly_cool') since integration
+  // 1.3.0; integration 1.2.x sent localized text instead. Normalizing
+  // lowercase-with-underscores also recovers the English 1.2.x values.
+  _getComfortLevel(attrs) {
+    const raw = attrs.comfort_level || 'comfortable';
+    if (COMFORT_COLORS[raw]) return raw;
+    return String(raw).toLowerCase().replace(/ /g, '_');
+  }
+
+  // Integration contract: entity.state = calculated feels-like (in the
+  // entity's unit_of_measurement); attributes.temperature = raw measured
+  // temperature, always in attributes.temperature_unit (Celsius).
+  _getDisplayUnit(entity) {
+    return this._config.temperature_unit || entity.attributes.unit_of_measurement || '°C';
+  }
+
   _getTemperature(entity) {
-    const raw = parseFloat(entity.state);
-    const fromUnit = entity.attributes.unit_of_measurement || '°C';
-    const toUnit = this._config.temperature_unit || fromUnit;
+    const raw = parseFloat(entity.attributes.temperature);
+    const fromUnit = entity.attributes.temperature_unit || '°C';
+    const toUnit = this._getDisplayUnit(entity);
     return {
       value: formatValue(convertTemperature(raw, fromUnit, toUnit), 1),
       unit: toUnit,
@@ -71,9 +87,9 @@ class WeatherSenseCard extends LitElement {
   }
 
   _getFeelsLike(entity) {
-    const raw = parseFloat(entity.attributes.temperature);
+    const raw = parseFloat(entity.state);
     const fromUnit = entity.attributes.unit_of_measurement || '°C';
-    const toUnit = this._config.temperature_unit || fromUnit;
+    const toUnit = this._getDisplayUnit(entity);
     return formatValue(convertTemperature(raw, fromUnit, toUnit), 1);
   }
 
@@ -96,10 +112,15 @@ class WeatherSenseCard extends LitElement {
   }
 
   _getMethodLabel(entity) {
-    const method = entity.attributes.calculation_method;
-    if (!method) return null;
-    const key = `method_${method}`;
-    return t(key, this.hass);
+    // calculation_method_key (integration >= 1.3.0) is a stable slug that
+    // maps onto the card's method_* translations; calculation_method is
+    // already-localized display text used as the fallback.
+    const key = entity.attributes.calculation_method_key;
+    if (key) {
+      const label = t(`method_${key}`, this.hass);
+      if (label !== `method_${key}`) return label;
+    }
+    return entity.attributes.calculation_method || null;
   }
 
   render() {
@@ -113,7 +134,7 @@ class WeatherSenseCard extends LitElement {
     }
 
     const attrs = entity.attributes;
-    const level = attrs.comfort_level || 'comfortable';
+    const level = this._getComfortLevel(attrs);
     const icon = COMFORT_ICONS[level] || COMFORT_ICONS.comfortable;
     const isComfy = attrs.is_comfortable;
     const temp = this._getTemperature(entity);
